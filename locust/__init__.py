@@ -116,28 +116,6 @@ EXIT_CODE = 2
 #           Load module config and set depended global variables
 # -----------------------------------------------------------------------------
 
-
-# def post_actions(mod):
-#     """Setup global variables are depended on config.
-#
-#     Convert STANDALONE variable to bool.
-#     Setup LOCUST_INFO dictionary.
-#     Extend flask options from config file to full stack.
-#
-#     Args:
-#       mod (confobj.ConfObj): locust module refernce.
-#     """
-#     assert ismodule(mod), 'The "mod" type must be types.ModuleType instance.'
-#     flsk_cfg = getattr(mod, 'WEB_SRV_CFG')
-#     setattr(mod, 'LOCUST_INFO', dict(
-#         agent_ip=getattr(mod, 'AGENT_IP'),
-#         agent_hostname=getattr(mod, 'AGENT_HSTNM'),
-#         agent_port=flsk_cfg['port'],
-#         agent_key=getattr(mod, 'AGENT_KEY'),
-#         project_id=getattr(mod, 'PRJ_ID'),
-#         infected_id=getattr(mod, 'INF_ID')))
-
-
 def load_config():
     """Load locust module config and initialise global variables."""
     try:
