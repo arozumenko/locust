@@ -60,6 +60,9 @@ class LocustDriver(object):
         if not self.nodes:
             raise NameError('Nodes not initialized')
         output = {}
+        node_groups = [node_groups] if not isinstance(node_groups, list) else \
+            node_groups
+        nodes = [nodes] if not isinstance(nodes, list) else nodes
         if node_groups:
             for each in node_groups:
                 if each in self.nodes['node_groups']:
@@ -71,6 +74,7 @@ class LocustDriver(object):
                     output[each] = self.nodes['nodes'][each]
         if not (nodes or node_groups):
             output = self.nodes['nodes']
+        print output
         return output
 
     @staticmethod
@@ -131,6 +135,7 @@ class LocustDriver(object):
         for key, value in work_nodes.items():
             data['key'] = sha256(self.nodes['keys'][key]).hexdigest()
             result[key] = loads(self._send_command(value, data))
+        print data
         return result
 
     #------------------------------------------------------------------
