@@ -43,7 +43,7 @@ def get_process(pids=None, names=None):
         names = parse_args_list(names)
         processes = [psutil.Process(pid) for pid in pids if
                      psutil.pid_exists(pid)]
-        if names:
+        if names and not pids:
             # Do not add current python process to result list.
             cur_pid = getpid()
             local_processes = [proc for proc in psutil.process_iter() if
