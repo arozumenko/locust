@@ -99,7 +99,7 @@ class locust(Resource):
         #pylint: disable=E1101
         if err:
             return {"status": err, "value": value}, requests.codes.forbidden
-        return dumps(value), requests.codes.ok
+        return value, requests.codes.ok
 
 
 API.add_resource(locust, '/')

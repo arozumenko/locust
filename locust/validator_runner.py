@@ -75,7 +75,7 @@ class ValidatorRunner(object):
                 else:
                     result = getattr(self.api, command)()
                 #Here we return correct result:
-                return err, dumps(result, indent=2)
+                return err, result
             except AttributeError as ex:
                 err = "wrong_command"
                 value = "Wrong command name. Command: %s Data: %s " \

@@ -15,7 +15,9 @@
 """Locust Driver module."""
 #pylint: disable=too-many-arguments,too-many-locals,unused-argument
 from urllib2 import urlopen, HTTPError, Request
-from json import dumps
+from hashlib import sha256
+from json import dumps, loads
+from time import sleep
 
 
 DEF_TIMEOUT = 60
@@ -23,16 +25,9 @@ DEF_TIMEOUT = 60
 
 class LocustDriver(object):
     """
-    {"nodes":{
-                "zzzz":"yyy.yyy.yyy.yyy"
-            }
-    "node_groups":{
-                    "group1":["zzzz","yyyy"]
-                }
-    "keys":{
-                    "zzzzz":"yyyyyyy"
-                }
-    }
+    {"nodes":{"zzzz":"yyy.yyy.yyy.yyy"}
+    "node_groups":{"group1":["zzzz","yyyy"]}
+    "keys":{"zzzzz":"yyyyyyy"}}
     """
 
     def __init__(self, nodes=None):
@@ -134,8 +129,8 @@ class LocustDriver(object):
         work_nodes = self._prepare_nodes(nodes, node_groups)
         result = {}
         for key, value in work_nodes.items():
-            data['key'] = self.nodes['keys'][key]
-            result[key] = eval(self._send_command(value, data))
+            data['key'] = sha256(self.nodes['keys'][key]).hexdigest()
+            result[key] = loads(self._send_command(value, data))
         return result
 
     #------------------------------------------------------------------
@@ -155,6 +150,33 @@ class LocustDriver(object):
             {list: [{process1_dict}, {process2_dict}, ..., {processN_dict}]}.
         """
         return self._basic_cmd('get_process', nodes, node_groups, pids, names)
+
+    def wait_for_process(self, nodes=None, node_groups=None, pids=None,
+                         names=None, timeout=60):
+        """
+        Waits for <timeout> seconds for process to appear
+
+        Arguments:
+            nodes - list of nodes to execute command
+                    (eg. ["192.168.0.1:8080","192.168.0.1:4444"])
+            node_groups - list of node groups to execute COMMANDS
+            pids - list of process PIDs to get;
+            names - list of process names to get.
+            timeout - seconds of wait
+        Return:
+            {list: [{process1_dict}, {process2_dict}, ..., {processN_dict}]}.
+            or
+            {list: []}
+        """
+        for _ in range(timeout):
+            proc_list = self._basic_cmd('get_process', nodes, node_groups,
+                                        pids, names)
+            if isinstance(proc_list, dict) and 'list' in proc_list and \
+                    proc_list['list']:
+                return proc_list
+            sleep(1)
+        else:
+            return {'list': []}
 
     def kill_process(self, nodes=None, node_groups=None, pids=None,
                      names=None):
