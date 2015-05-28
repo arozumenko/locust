@@ -111,10 +111,9 @@ def run(**kwargs):
     Run the locust flask webservice with defined options
     """
     #pylint: disable=W0142
-    #opt = parse_websrv_kwargs(WEB_SRV_CFG, **kwargs)
-    #http_server = WSGIServer(opt, APP)
-    #http_server.serve_forever()
-    APP.run("127.0.0.1", 8080, True)
+    opt = parse_websrv_kwargs(WEB_SRV_CFG, **kwargs)
+    http_server = WSGIServer(opt, APP)
+    http_server.serve_forever()
 
 
 if __name__ == '__main__':

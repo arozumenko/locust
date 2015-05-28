@@ -46,27 +46,15 @@ IP = gethostbyname(HOSTNAME)
 DEF_CFG = ConfigObj()
 DEF_CFG['webserver'] = {
     'host': '0.0.0.0',
-    'port': 8080}
+    'port': 6969}
 
 DEF_CFG['general'] = {
     'log_out_path': '{log_out_path}',
     'log_err_path': '{log_err_path}'}
 
-DEF_CFG['watchdog'] = {
-    'host': '127.0.0.1',
-    'port': 5458}
-
 DEF_CFG['logging'] = {
     'path': '{log_path}',
     'level': 'error'}
-
-DEF_CFG['agent'] = {
-    'standalone': '{standalone}',
-    'ip': IP,
-    'hostname': HOSTNAME,
-    'key': 'key',
-    'project_id': 'project_id',
-    'infected_id': 'infected_id'}
 
 # -----------------------------------------------------------------------------
 #                      Define supervisor config template
@@ -110,7 +98,6 @@ lutil.CONFIG_STORAGE.add(PCKG_NAME, {
 # -----------------------------------------------------------------------------
 #               Setting real values for default module config
 # -----------------------------------------------------------------------------
-DEF_CFG['agent']['standalone'] = False
 DEF_CFG['logging']['path'] = join(
     lutil.LOG_PATH.format(name=PCKG_NAME), PCKG_NAME + '.log')
 
@@ -130,46 +117,36 @@ EXIT_CODE = 2
 # -----------------------------------------------------------------------------
 
 
-def post_actions(mod):
-    """Setup global variables are depended on config.
-
-    Convert STANDALONE variable to bool.
-    Setup LOCUST_INFO dictionary.
-    Extend flask options from config file to full stack.
-
-    Args:
-      mod (confobj.ConfObj): locust module refernce.
-    """
-    assert ismodule(mod), 'The "mod" type must be types.ModuleType instance.'
-    flsk_cfg = getattr(mod, 'WEB_SRV_CFG')
-    setattr(mod, 'LOCUST_INFO', dict(
-        agent_ip=getattr(mod, 'AGENT_IP'),
-        agent_hostname=getattr(mod, 'AGENT_HSTNM'),
-        agent_port=flsk_cfg['port'],
-        agent_key=getattr(mod, 'AGENT_KEY'),
-        project_id=getattr(mod, 'PRJ_ID'),
-        infected_id=getattr(mod, 'INF_ID')))
+# def post_actions(mod):
+#     """Setup global variables are depended on config.
+#
+#     Convert STANDALONE variable to bool.
+#     Setup LOCUST_INFO dictionary.
+#     Extend flask options from config file to full stack.
+#
+#     Args:
+#       mod (confobj.ConfObj): locust module refernce.
+#     """
+#     assert ismodule(mod), 'The "mod" type must be types.ModuleType instance.'
+#     flsk_cfg = getattr(mod, 'WEB_SRV_CFG')
+#     setattr(mod, 'LOCUST_INFO', dict(
+#         agent_ip=getattr(mod, 'AGENT_IP'),
+#         agent_hostname=getattr(mod, 'AGENT_HSTNM'),
+#         agent_port=flsk_cfg['port'],
+#         agent_key=getattr(mod, 'AGENT_KEY'),
+#         project_id=getattr(mod, 'PRJ_ID'),
+#         infected_id=getattr(mod, 'INF_ID')))
 
 
 def load_config():
     """Load locust module config and initialise global variables."""
     try:
         init_module(PCKG_NAME, lutil.MODULE_CFG_PATH,
-                    [('WDOG_HOST', 'watchdog/host'),
-                     ('WDOG_PORT', 'watchdog/port'),
-                     ('LOGGING_LEVEL', 'logging/level'),
+                    [('LOGGING_LEVEL', 'logging/level'),
                      ('LOG_PATH', 'logging/path'),
-                     ('AGENT_IP', 'agent/ip'),
-                     ('AGENT_HSTNM', 'agent/hostname'),
-                     ('AGENT_KEY', 'agent/key'),
-                     ('PRJ_ID', 'agent/project_id'),
-                     ('INF_ID', 'agent/infected_id'),
-                     ('STANDALONE', 'agent/standalone', 'as_bool'),
-                     ('WEB_SRV_CFG', 'webserver')],
-                    postactions=[post_actions])
+                     ('WEB_SRV_CFG', 'webserver')])
     except RuntimeError as ex:
         print ex.message
         sys.exit(EXIT_CODE)
-
 
 load_config()
