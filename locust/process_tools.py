@@ -51,8 +51,8 @@ def get_process(pids=None, names=None):
             for name in names:
                 for process in local_processes:
                     try:
-                        if fnmatch(process.name(), name) or fnmatch(
-                                ' '.join(process.cmdline()), name):
+                        if fnmatch(process.name, name) or fnmatch(
+                                ' '.join(process.cmdline), name):
                             processes.append(process)
                     except psutil.AccessDenied:
                         pass
