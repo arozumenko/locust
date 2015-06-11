@@ -24,7 +24,7 @@ from glob import glob
 from tempfile import gettempdir
 from os.path import join as join_path
 
-from psutil import phymem_usage
+from psutil import swap_memory
 
 from locust.common import IS_WINDOWS
 from locust.common import message_wrapper, convert_timeout
@@ -83,7 +83,7 @@ def _burn_ram(timeout):
     # Try to fill all free RAM space
     while True:
         try:
-            fill_ram = ' ' * int((float(phymem_usage().free) / 100) * f_ratio)
+            fill_ram = ' ' * int((float(swap_memory().free) / 100) * f_ratio)
             break
         except (MemoryError, OverflowError):
             f_ratio -= 1
@@ -91,16 +91,16 @@ def _burn_ram(timeout):
     # Try to fill all left free RAM space (Windows OS specific)
     while True:
         try:
-            decrease = ' ' * int((float(phymem_usage().free) / 100) * d_ratio)
+            decrease = ' ' * int((float(swap_memory().free) / 100) * d_ratio)
             break
         except (MemoryError, OverflowError):
             d_ratio -= 1
 
     end_time = time() + timeout
     while time() < end_time:
-        if float(phymem_usage().percent) < 90:
+        if float(swap_memory().percent) < 90:
             try:
-                spike += ' ' * int((float(phymem_usage().free) / 100) * 10)
+                spike += ' ' * int((float(swap_memory().free) / 100) * 10)
             except (MemoryError, OverflowError):
                 spike = ''
 
