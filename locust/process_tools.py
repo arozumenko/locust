@@ -67,7 +67,7 @@ def get_process(pids=None, names=None):
                 'pid': process.pid,
                 'name': process.name,
                 'status': str(process.status),
-                'cmd': ' '.join(process.cmdline()),
+                'cmd': ' '.join(process.cmdline),
                 'node': str(getnode()),
                 'endpoint': hostname
             }
