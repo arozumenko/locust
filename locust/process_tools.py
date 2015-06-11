@@ -51,8 +51,8 @@ def get_process(pids=None, names=None):
             for name in names:
                 for process in local_processes:
                     try:
-                        if fnmatch(process.name, name) or fnmatch(
-                                ' '.join(process.cmdline), name):
+                        if fnmatch(process.name(), name) or fnmatch(
+                                ' '.join(process.cmdline()), name):
                             processes.append(process)
                     except psutil.AccessDenied:
                         pass
@@ -65,15 +65,15 @@ def get_process(pids=None, names=None):
                 hostname = gethostbyname('localhost')
             temp = {
                 'pid': process.pid,
-                'name': process.name,
-                'status': str(process.status),
-                'cmd': ' '.join(process.cmdline),
+                'name': process.name(),
+                'status': str(process.status()),
+                'cmd': ' '.join(process.cmdline()),
                 'node': str(getnode()),
                 'endpoint': hostname
             }
             if pids or names:
-                temp['cpu'] = process.get_cpu_percent() / psutil.NUM_CPUS
-                temp['ram'] = long(process.get_memory_info()[0]) / 1024
+                temp['cpu'] = process.cpu_percent() / psutil.cpu_count()
+                temp['ram'] = long(process.memory_info()[0]) / 1024
             if temp not in result:
                 result.append(temp)
         except (psutil.NoSuchProcess, psutil.AccessDenied):
