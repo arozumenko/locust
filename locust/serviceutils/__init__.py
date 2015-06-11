@@ -70,9 +70,7 @@ if IS_LINUX or IS_OSX:
 
     MODULE_CFG_PATH = '/etc/locust/'
 
-    LOG_PATH = '/var/log/locust/{name}'
-    LOG_OUT_PATH = '/var/log/locust/{name}/out'
-    LOG_ERR_PATH = '/var/log/locust/{name}/err'
+    LOG_PATH = LOG_OUT_PATH = LOG_ERR_PATH ='/var/log/{name}'
 elif IS_WINDOWS:
     # pylint: disable=F0401
     from winpaths import get_common_appdata
