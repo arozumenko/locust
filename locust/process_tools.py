@@ -15,7 +15,7 @@
 
 """Process tools commands."""
 from socket import gethostbyname, gethostname, gaierror
-from uuid import getnode, uuid1
+from uuid import getnode
 from time import time, sleep
 from operator import itemgetter
 from os import getpid
@@ -72,10 +72,9 @@ def get_process(pids=None, names=None):
                 'endpoint': hostname
             }
             if pids or names:
-                temp['cpu'] = process.cpu_percent() / psutil.cpu_count()
-                temp['ram'] = long(process.memory_info()[0]) / 1024
+                temp['cpu'] = process.cpu_percent / psutil.cpu_count()
+                temp['ram'] = long(process.memory_info[0]) / 1024
             if temp not in result:
-                temp['uuid'] = str(uuid1())
                 result.append(temp)
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             print 'NoSuchProcess or AccessDenied exception occurred'
