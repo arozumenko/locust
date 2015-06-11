@@ -65,8 +65,8 @@ def get_process(pids=None, names=None):
                 hostname = gethostbyname('localhost')
             temp = {
                 'pid': process.pid,
-                'name': process.name(),
-                'status': str(process.status()),
+                'name': process.name,
+                'status': str(process.status),
                 'cmd': ' '.join(process.cmdline()),
                 'node': str(getnode()),
                 'endpoint': hostname

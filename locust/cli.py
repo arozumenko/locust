@@ -54,7 +54,7 @@ def main():
     class Lservice(Service):
         """ The bagent module service util."""
 
-        def service_install(self, standalone=False):
+        def service_install(self, standalone=True):
             """Install the bagent module as supervisor service.
 
             Args:
