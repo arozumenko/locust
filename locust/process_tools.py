@@ -72,8 +72,8 @@ def get_process(pids=None, names=None):
                 'endpoint': hostname
             }
             if pids or names:
-                temp['cpu'] = process.cpu_percent / psutil.NUM_CPUS
-                temp['ram'] = long(process.memory_info[0]) / 1024
+                temp['cpu'] = process.get_cpu_percent() / psutil.NUM_CPUS
+                temp['ram'] = long(process.get_memory_info()[0]) / 1024
             if temp not in result:
                 result.append(temp)
         except (psutil.NoSuchProcess, psutil.AccessDenied):
