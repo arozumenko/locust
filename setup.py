@@ -1,4 +1,3 @@
-#!env python
 from sys import platform
 from setuptools import setup
 
