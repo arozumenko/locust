@@ -84,10 +84,8 @@ def validate_ip(ipv):
           bool : True if given ip valid.
 
         Examples:
-            >>> validate_ip('0.0.0.0')
-            True
-            >>> validate_ip('foo')
-            False
+            validate_ip('0.0.0.0') ==> True
+            validate_ip('foo') ==> False
     """
     import iptools
     return iptools.ipv4.validate_ip(ipv) or iptools.ipv6.validate_ip(ipv)
@@ -103,12 +101,9 @@ def validate_port(port):
       bool : True if given port valid.
 
     Examples:
-        >>> validate_port('9000')
-        True
-        >>> validate_port('foo')
-        False
-        >>> validate_port('1000000')
-        False
+        validate_port('9000') ==> True
+        validate_port('foo') ==> False
+        validate_port('1000000') ==> False
     """
     try:
         return 0 <= int(port) <= 65535

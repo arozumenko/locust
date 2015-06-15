@@ -24,7 +24,7 @@ from locust.serviceutils.serviceconfig import confobj_to_bservice_utiltmpl
 from locust.common import init_module
 from locust import serviceutils as lutil
 
-
+__version__ = '1.0a'
 PCKG_NAME = __package__
 # -----------------------------------------------------------------------------
 # Initialize global variables are depended on config values
